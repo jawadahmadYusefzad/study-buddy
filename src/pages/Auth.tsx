@@ -101,7 +101,7 @@ export default function Auth() {
 
               <Button
                 type="submit"
-                className="h-12 w-full rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 text-base font-semibold text-white shadow-xs transition-transform duration-200 hover:scale-[1.02]"
+                className="h-12 w-full rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-base font-semibold text-white shadow-xs transition-transform duration-200 hover:scale-[1.02]"
               >
                 <LogIn className="size-4" />
                 Enter Study Buddy

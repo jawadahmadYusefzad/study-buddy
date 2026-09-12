@@ -56,7 +56,7 @@ export default function Landing() {
           {authed ? (
             <Button
               asChild
-              className="cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 text-white"
+              className="cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
             >
               <Link to="/dashboard">
                 <LayoutDashboard className="size-4" />
@@ -66,7 +66,7 @@ export default function Landing() {
           ) : (
             <Button
               asChild
-              className="cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 text-white"
+              className="cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
             >
               <Link to="/auth">
                 Get started
@@ -99,7 +99,7 @@ export default function Landing() {
               className="text-4xl leading-tight font-bold tracking-tight text-balance text-card-foreground sm:text-6xl"
             >
               Find the study partner who{" "}
-              <span className="bg-gradient-to-r from-teal-500 to-sky-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#8a3582] to-[#bf9245] bg-clip-text text-transparent">
                 actually gets you
               </span>
             </motion.h1>
@@ -122,7 +122,7 @@ export default function Landing() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 px-7 text-base text-white shadow-xs transition-transform duration-200 hover:scale-[1.03]"
+                className="h-12 cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] px-7 text-base text-white shadow-xs transition-transform duration-200 hover:scale-[1.03]"
               >
                 <Link to="/auth">
                   Find my study buddy
@@ -161,7 +161,7 @@ export default function Landing() {
                   className="glass glass-soft glass-interactive rounded-2xl p-5"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/80 to-sky-600/80 font-semibold text-white">
+                    <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#8a3582]/90 to-[#bf9245]/90 font-semibold text-white">
                       {p.name
                         .split(" ")
                         .map((n) => n[0])
@@ -183,7 +183,7 @@ export default function Landing() {
                     </div>
                     <div className="h-2 rounded-full bg-black/10 dark:bg-white/10">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-teal-400 to-sky-500"
+                        className="h-full rounded-full bg-gradient-to-r from-[#c084fc] to-[#e0b356]"
                         style={{ width: `${p.score}%` }}
                       />
                     </div>
@@ -225,7 +225,7 @@ export default function Landing() {
                 transition={{ duration: 0.45, delay: i * 0.1 }}
                 className="glass glass-interactive rounded-2xl p-6"
               >
-                <div className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/25 to-sky-600/25 text-primary">
+                <div className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#8a3582]/15 to-[#bf9245]/25 text-primary">
                   <f.icon className="size-5" />
                 </div>
                 <h3 className="mt-4 font-semibold text-card-foreground">
@@ -280,7 +280,7 @@ export default function Landing() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 px-8 text-base text-white shadow-xs transition-transform duration-200 hover:scale-[1.03]"
+                className="h-12 cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] px-8 text-base text-white shadow-xs transition-transform duration-200 hover:scale-[1.03]"
               >
                 <Link to="/auth">
                   Claim your access

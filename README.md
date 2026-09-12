@@ -1,6 +1,6 @@
 # Study Buddy 🎓
 
-A frosted-glass **student study-partner matching app** for HITSZ cohorts. Enter an access code, browse six hand-picked classmates ranked by compatibility score, and connect with your perfect study group.
+A frosted-glass **student study-partner matching app** for HITSZ cohorts — plum and champagne gold glass over a breathing aurora. Enter an access code, browse six hand-picked classmates ranked by compatibility score, and connect with your perfect study group.
 
 ## 🚀 Getting started
 
@@ -28,23 +28,23 @@ The app is pre-configured and running — no setup required.
 | 🫙 Empty state | Friendly glass panel when search/filter yields nothing |
 | 🔔 Toasts | Success / info / error notifications via Sonner |
 | 🎉 Confetti | Bursts when you connect with a classmate |
-| 🟦🟩 Navy + teal palette | Glass surfaces over an animated aurora backdrop |
+| 🟪🟨 Plum + champagne gold palette | Glass surfaces over an animated aurora backdrop |
 
 ## 🎨 Design system — glassmorphism
 
 The whole UI reads as **frosted glass floating over a navy aurora**:
 
-- **Palette** — deep navy base (`oklch` navy scale) with **teal → sky** accents; teal glows breathe in the background aurora.
+- **Palette** — deep plum base (`oklch` plum scale) with **champagne gold** accents; plum/gold glows breathe in the background aurora.
 - **Glass surfaces** — three tiers (`glass`, `glass-soft`, `glass-deep`) combining translucent fills, `backdrop-filter: blur()`, 1px light borders, inner top highlight, and deep soft shadows.
 - **Rounded corners** — generous `2xl`/`3xl` radii on every panel and card.
-- **Hover effects** — cards lift (`glass-interactive`), controls tint teal (`glass-hover`), and hero panels sweep a light sheen.
+- **Hover effects** — cards lift (`glass-interactive`), controls tint gold (`glass-hover`), and hero panels sweep a light sheen.
 - **Typography** — tight-tracking bold headings, muted glass-tinted body text.
 - Works in **light and dark** — glass tokens switch automatically.
 
 ## 🛠 Tech stack
 
 - **React 19 + TypeScript + Vite**
-- **Tailwind CSS v4** with OKLCH theme tokens (navy + teal)
+- **Tailwind CSS v4** with OKLCH theme tokens (plum + champagne gold)
 - **shadcn/ui** components (Button, Input, Badge, Sonner toasts)
 - **Framer Motion** for entrance animations, card transitions, and bar sweeps
 - **lucide-react** icons

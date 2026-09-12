@@ -142,9 +142,9 @@ function initials(name: string) {
 }
 
 function scoreTone(score: number) {
-  if (score >= 85) return "text-teal-500";
-  if (score >= 70) return "text-sky-500";
-  return "text-amber-500";
+  if (score >= 85) return "text-[var(--tone-high)]";
+  if (score >= 70) return "text-[var(--tone-mid)]";
+  return "text-[var(--tone-low)]";
 }
 
 function StatCard({
@@ -161,7 +161,7 @@ function StatCard({
   return (
     <div className="glass glass-soft glass-interactive rounded-2xl p-4 sm:p-5">
       <div className="flex items-center gap-3">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/25 to-sky-600/25 text-primary">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#8a3582]/15 to-[#bf9245]/25 text-primary">
           <Icon className="size-5" />
         </div>
         <div className="min-w-0">
@@ -196,7 +196,7 @@ function StudentCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3.5">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/85 to-sky-600/85 text-lg font-semibold text-white">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8a3582]/90 to-[#bf9245]/90 text-lg font-semibold text-white">
             {initials(student.name)}
           </div>
           <div>
@@ -252,7 +252,7 @@ function StudentCard({
             initial={{ width: 0 }}
             animate={{ width: `${student.matchScore}%` }}
             transition={{ duration: 0.9, ease: "easeOut", delay: 0.15 }}
-            className="h-full rounded-full bg-gradient-to-r from-teal-400 to-sky-500"
+            className="h-full rounded-full bg-gradient-to-r from-[#c084fc] to-[#e0b356]"
           />
         </div>
       </div>
@@ -271,7 +271,7 @@ function StudentCard({
         <Button
           size="sm"
           onClick={() => onConnect(student)}
-          className="cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 text-white transition-transform duration-200 hover:scale-[1.04]"
+          className="cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white transition-transform duration-200 hover:scale-[1.04]"
         >
           <Handshake className="size-4" />
           Connect
@@ -352,7 +352,7 @@ export default function Dashboard() {
                   description: "All connections cleared — start fresh.",
                 });
               }}
-              className="cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 text-white"
+              className="cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
             >
               <RefreshCw className="size-4" />
               New session
@@ -418,7 +418,7 @@ export default function Dashboard() {
                 className={cn(
                   "cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200",
                   filter === f.value
-                    ? "bg-gradient-to-r from-teal-500 to-sky-600 text-white"
+                    ? "bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
                     : "glass glass-hover text-glass-muted",
                 )}
               >
@@ -436,7 +436,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="glass glass-deep flex flex-col items-center rounded-3xl px-8 py-16 text-center"
             >
-              <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/25 to-sky-600/25 text-primary">
+              <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8a3582]/15 to-[#bf9245]/25 text-primary">
                 <SearchX className="size-8" />
               </div>
               <h2 className="mt-5 text-xl font-semibold tracking-tight text-card-foreground">
@@ -455,7 +455,7 @@ export default function Dashboard() {
                     description: "Showing all six classmates again.",
                   });
                 }}
-                className="mt-6 cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-sky-600 text-white"
+                className="mt-6 cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
               >
                 <RefreshCw className="size-4" />
                 Clear filters

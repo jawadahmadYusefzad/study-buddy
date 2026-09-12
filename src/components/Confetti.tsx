@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const COLORS = ["#2dd4bf", "#0ea5e9", "#5eead4", "#818cf8", "#f59e0b", "#f472b6"];
+const COLORS = ["#c084fc", "#fbbf24", "#e879f9", "#f59e0b", "#d8b4fe", "#fcd34d"];
 
 interface Piece {
   left: number;
