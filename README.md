@@ -21,6 +21,10 @@
 | 🔔 **Toasts** | Success / info / error notifications via Sonner |
 | 🎉 **Confetti** | Particle burst every time you connect with a classmate |
 | 🪟 **Glassmorphism design** | Every surface is frosted glass floating over an animated aurora |
+| 🙋 **Ask a Senior** | Q&A feed with expandable answers, senior ⭐ badges, course/time filters, and an "Ask a Question" modal |
+| 📚 **Share Resources** | Glass resource grid with filter chips (All / CS101 / Math / Notes / Past Papers), save counts, downloads, and a drag-and-drop upload modal |
+| 🏠 **Study Room** | Live-feel chat rooms with message bubbles, member sidebar, online dots, and a 25:00 Pomodoro timer (Start / Pause / Reset) |
+| 🧭 **Tab navigation** | Four sections — Find Buddy, Ask Senior, Resources, Study Room — switchable from a glass tab bar with animated transitions |
 
 ## 🛠 Tech stack
 
@@ -75,10 +79,14 @@ No environment variables or backend setup are required — the app is fully clie
     │   ├── Confetti.tsx        # Celebration particle burst
     │   ├── AccessGuard.tsx     # Session-storage route guard (redirects to /auth)
     │   └── ui/                 # shadcn/ui primitives
+    ├── components/
+    │   ├── senior/AskSenior.tsx    # Q&A feed: seeds, expandable answers, ask modal
+    │   ├── resources/Resources.tsx # Resource grid: chips, save/download, upload modal
+    │   ├── study/StudyRoom.tsx     # Rooms, chat, Pomodoro, member sidebar
     └── pages/
         ├── Landing.tsx         # Hero, feature cards, stats band, CTA, footer
         ├── Auth.tsx            # Access-code gate (HITSZ2025)
-        └── Dashboard.tsx       # Matching hub: stats, search, filters, 6 cards
+        └── Dashboard.tsx       # Tabbed hub: Find Buddy / Ask Senior / Resources / Study Room
 ```
 
 ## 🔮 Future improvements

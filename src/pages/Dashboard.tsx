@@ -4,10 +4,13 @@ import {
   CalendarDays,
   Clock,
   Compass,
+  DoorOpen,
   Filter,
   GraduationCap,
   Handshake,
   LayoutDashboard,
+  Library,
+  MessageSquare,
   Moon,
   RefreshCw,
   Search,
@@ -20,6 +23,9 @@ import { toast } from "sonner";
 import { Aurora } from "@/components/Aurora";
 import { BrandMark } from "@/components/BrandMark";
 import { Confetti } from "@/components/Confetti";
+import AskSenior from "@/components/senior/AskSenior";
+import Resources from "@/components/resources/Resources";
+import StudyRoom from "@/components/study/StudyRoom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +51,14 @@ function useDarkMode() {
 }
 
 type Availability = "mornings" | "evenings" | "weekends";
+type TabId = "buddy" | "senior" | "resources" | "room";
+
+const TABS: { id: TabId; label: string; icon: typeof Users }[] = [
+  { id: "buddy", label: "Find Buddy", icon: Users },
+  { id: "senior", label: "Ask Senior", icon: MessageSquare },
+  { id: "resources", label: "Resources", icon: Library },
+  { id: "room", label: "Study Room", icon: DoorOpen },
+];
 
 interface Student {
   id: number;
@@ -281,12 +295,17 @@ function StudentCard({
   );
 }
 
-export default function Dashboard() {
-  const { dark, toggle } = useDarkMode();
+function FindBuddy({
+  connected,
+  onConnect,
+  onReset,
+}: {
+  connected: number[];
+  onConnect: (s: Student) => void;
+  onReset: () => void;
+}) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Availability | "all">("all");
-  const [connected, setConnected] = useState<number[]>([]);
-  const [confettiKey, setConfettiKey] = useState(0);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -301,6 +320,146 @@ export default function Dashboard() {
     }).sort((a, b) => b.matchScore - a.matchScore);
   }, [query, filter]);
 
+  const avgMatch =
+    STUDENTS.reduce((sum, s) => sum + s.matchScore, 0) / STUDENTS.length;
+  const topMatch = Math.max(...STUDENTS.map((s) => s.matchScore));
+  const availabilities = new Set(STUDENTS.map((s) => s.availability));
+
+  return (
+    <>
+      {/* Title row */}
+      <div className="mt-8 flex flex-col gap-1">
+        <p className="flex items-center gap-2 text-sm text-glass-muted">
+          <LayoutDashboard className="size-4" /> Cohort matching hub
+        </p>
+        <h1 className="text-3xl font-bold tracking-tight text-card-foreground sm:text-4xl">
+          Your study matches
+        </h1>
+        <p className="mt-1 text-glass-muted">
+          Six hand-picked classmates from your cohort, ranked by compatibility.
+        </p>
+      </div>
+
+      {/* Stats bar */}
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard
+          icon={Users}
+          label="classmates in roster"
+          value={String(STUDENTS.length)}
+          hint="6 cohorts sampled"
+        />
+        <StatCard
+          icon={Compass}
+          label="average match score"
+          value={`${Math.round(avgMatch)}%`}
+          hint={`top ${topMatch}%`}
+        />
+        <StatCard
+          icon={Clock}
+          label="study windows"
+          value={String(availabilities.size)}
+          hint="mornings · evenings · weekends"
+        />
+      </div>
+
+      {/* Search + filter toolbar */}
+      <div className="glass glass-soft mt-6 flex flex-col gap-3 rounded-2xl p-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="relative w-full lg:max-w-sm">
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-primary" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by name, major, or course…"
+            className="glass-hover h-11 rounded-xl bg-transparent pl-10"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase text-glass-muted">
+            <Filter className="size-3.5" /> Availability
+          </span>
+          {FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setFilter(f.value)}
+              className={cn(
+                "cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200",
+                filter === f.value
+                  ? "bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
+                  : "glass glass-hover text-glass-muted",
+              )}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Cards grid / empty state */}
+      <div className="mt-6">
+        {filtered.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass glass-deep flex flex-col items-center rounded-3xl px-8 py-16 text-center"
+          >
+            <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8a3582]/15 to-[#bf9245]/25 text-primary">
+              <SearchX className="size-8" />
+            </div>
+            <h2 className="mt-5 text-xl font-semibold tracking-tight text-card-foreground">
+              No matches found
+            </h2>
+            <p className="mt-2 max-w-sm text-sm text-glass-muted">
+              {query
+                ? `Nothing matches "${query}"${filter !== "all" ? ` in ${filter}` : ""}. Try a different search or clear the filters.`
+                : "No classmates available in this study window right now."}
+            </p>
+            <Button
+              onClick={() => {
+                setQuery("");
+                setFilter("all");
+                toast("Filters cleared", {
+                  description: "Showing all six classmates again.",
+                });
+              }}
+              className="mt-6 cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
+            >
+              <RefreshCw className="size-4" />
+              Clear filters
+            </Button>
+          </motion.div>
+        ) : (
+          <motion.div layout className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <AnimatePresence mode="popLayout">
+              {filtered.map((s) => (
+                <StudentCard key={s.id} student={s} onConnect={onConnect} />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <footer className="mt-10 flex flex-col items-center justify-between gap-3 pb-4 text-xs text-glass-muted sm:flex-row">
+        <span className="flex items-center gap-1.5">
+          <GraduationCap className="size-3.5" />
+          Study Buddy · plum & gold glass for HITSZ cohorts
+        </span>
+        <span>
+          {connected.length > 0
+            ? `${connected.length} connection${connected.length > 1 ? "s" : ""} made this session`
+            : "Connect with a classmate to start a session"}
+        </span>
+      </footer>
+    </>
+  );
+}
+
+export default function Dashboard() {
+  const { dark, toggle } = useDarkMode();
+  const [activeTab, setActiveTab] = useState<TabId>("buddy");
+  const [connected, setConnected] = useState<number[]>([]);
+  const [confettiKey, setConfettiKey] = useState(0);
+
   const handleConnect = (student: Student) => {
     if (connected.includes(student.id)) {
       toast.info(`Already connected with ${student.name.split(" ")[0]}`, {
@@ -314,11 +473,6 @@ export default function Dashboard() {
       description: `${student.matchScore}% match — they usually reply within a day.`,
     });
   };
-
-  const avgMatch =
-    STUDENTS.reduce((sum, s) => sum + s.matchScore, 0) / STUDENTS.length;
-  const topMatch = Math.max(...STUDENTS.map((s) => s.matchScore));
-  const availabilities = new Set(STUDENTS.map((s) => s.availability));
 
   return (
     <div className="relative min-h-screen">
@@ -360,130 +514,53 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Title row */}
-        <div className="mt-8 flex flex-col gap-1">
-          <p className="flex items-center gap-2 text-sm text-glass-muted">
-            <LayoutDashboard className="size-4" /> Cohort matching hub
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight text-card-foreground sm:text-4xl">
-            Your study matches
-          </h1>
-          <p className="mt-1 text-glass-muted">
-            Six hand-picked classmates from your cohort, ranked by
-            compatibility.
-          </p>
-        </div>
-
-        {/* Stats bar */}
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard
-            icon={Users}
-            label="classmates in roster"
-            value={String(STUDENTS.length)}
-            hint="6 cohorts sampled"
-          />
-          <StatCard
-            icon={Compass}
-            label="average match score"
-            value={`${Math.round(avgMatch)}%`}
-            hint={`top ${topMatch}%`}
-          />
-          <StatCard
-            icon={Clock}
-            label="study windows"
-            value={String(availabilities.size)}
-            hint="mornings · evenings · weekends"
-          />
-        </div>
-
-        {/* Search + filter toolbar */}
-        <div className="glass glass-soft mt-6 flex flex-col gap-3 rounded-2xl p-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="relative w-full lg:max-w-sm">
-            <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-primary" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, major, or course…"
-              className="glass-hover h-11 rounded-xl bg-transparent pl-10"
-            />
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase text-glass-muted">
-              <Filter className="size-3.5" /> Availability
-            </span>
-            {FILTERS.map((f) => (
+        {/* Tab navigation */}
+        <nav
+          aria-label="Sections"
+          className="glass glass-soft mt-5 grid grid-cols-2 gap-2 rounded-2xl p-2 sm:grid-cols-4"
+        >
+          {TABS.map((tab) => {
+            const active = activeTab === tab.id;
+            return (
               <button
-                key={f.value}
-                onClick={() => setFilter(f.value)}
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200",
-                  filter === f.value
-                    ? "bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
-                    : "glass glass-hover text-glass-muted",
+                  "flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200",
+                  active
+                    ? "bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white shadow-sm"
+                    : "text-glass-muted hover:text-card-foreground",
                 )}
               >
-                {f.label}
+                <tab.icon className="size-4" />
+                {tab.label}
               </button>
-            ))}
-          </div>
-        </div>
+            );
+          })}
+        </nav>
 
-        {/* Cards grid / empty state */}
-        <div className="mt-6">
-          {filtered.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="glass glass-deep flex flex-col items-center rounded-3xl px-8 py-16 text-center"
-            >
-              <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8a3582]/15 to-[#bf9245]/25 text-primary">
-                <SearchX className="size-8" />
-              </div>
-              <h2 className="mt-5 text-xl font-semibold tracking-tight text-card-foreground">
-                No matches found
-              </h2>
-              <p className="mt-2 max-w-sm text-sm text-glass-muted">
-                {query
-                  ? `Nothing matches "${query}"${filter !== "all" ? ` in ${filter}` : ""}. Try a different search or clear the filters.`
-                  : "No classmates available in this study window right now."}
-              </p>
-              <Button
-                onClick={() => {
-                  setQuery("");
-                  setFilter("all");
-                  toast("Filters cleared", {
-                    description: "Showing all six classmates again.",
-                  });
-                }}
-                className="mt-6 cursor-pointer rounded-xl bg-gradient-to-r from-[#8a3582] to-[#bf9245] text-white"
-              >
-                <RefreshCw className="size-4" />
-                Clear filters
-              </Button>
-            </motion.div>
-          ) : (
-            <motion.div layout className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-              <AnimatePresence mode="popLayout">
-                {filtered.map((s) => (
-                  <StudentCard key={s.id} student={s} onConnect={handleConnect} />
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <footer className="mt-10 flex flex-col items-center justify-between gap-3 pb-4 text-xs text-glass-muted sm:flex-row">
-          <span className="flex items-center gap-1.5">
-            <GraduationCap className="size-3.5" />
-            Study Buddy · frosted-glass matching for HITSZ cohorts
-          </span>
-          <span>
-            {connected.length > 0
-              ? `${connected.length} connection${connected.length > 1 ? "s" : ""} made this session`
-              : "Connect with a classmate to start a session"}
-          </span>
-        </footer>
+        {/* Section content with smooth transitions */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            {activeTab === "buddy" && (
+              <FindBuddy
+                connected={connected}
+                onConnect={handleConnect}
+                onReset={() => setConnected([])}
+              />
+            )}
+            {activeTab === "senior" && <AskSenior />}
+            {activeTab === "resources" && <Resources />}
+            {activeTab === "room" && <StudyRoom />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
